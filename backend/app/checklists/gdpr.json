@@ -1,0 +1,116 @@
+{
+  "name": "GDPR",
+  "slug": "gdpr",
+  "version": "2024",
+  "is_builtin": true,
+  "rules": [
+    {
+      "id": "GDPR-001",
+      "category": "Lawfulness",
+      "description": "Lawful basis for processing must be stated",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["lawful basis", "legal basis"],
+      "generic_fix": "State the lawful basis for processing (e.g. consent, contract, legitimate interest)."
+    },
+    {
+      "id": "GDPR-002",
+      "category": "Data Subject Rights",
+      "description": "Data subject rights must be described",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["right to access", "data subject rights"],
+      "generic_fix": "Describe data subject rights and how to exercise them."
+    },
+    {
+      "id": "GDPR-003",
+      "category": "Data Subject Rights",
+      "description": "Right to erasure must be addressed",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["right to erasure", "right to be forgotten"],
+      "generic_fix": "Add a clause covering the right to erasure / right to be forgotten."
+    },
+    {
+      "id": "GDPR-004",
+      "category": "Retention",
+      "description": "Data retention period must be specified",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["retention period", "data retention"],
+      "generic_fix": "Specify the data retention period and deletion process."
+    },
+    {
+      "id": "GDPR-005",
+      "category": "Governance",
+      "description": "Data Protection Officer contact must be present",
+      "severity": "info",
+      "detection_type": "keyword_required",
+      "keywords": ["data protection officer", "dpo"],
+      "generic_fix": "Provide DPO contact details."
+    },
+    {
+      "id": "GDPR-006",
+      "category": "Transfers",
+      "description": "Cross-border transfer safeguards must be referenced",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["standard contractual clauses", "adequacy decision"],
+      "generic_fix": "Reference SCCs or an adequacy decision for international transfers."
+    },
+    {
+      "id": "GDPR-007",
+      "category": "Consent",
+      "description": "Consent withdrawal mechanism must be described",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["withdraw consent", "opt out"],
+      "generic_fix": "Describe how data subjects can withdraw consent or opt out."
+    },
+    {
+      "id": "GDPR-008",
+      "category": "Cookies",
+      "description": "Cookie policy must be present",
+      "severity": "info",
+      "detection_type": "keyword_required",
+      "keywords": ["cookie policy", "cookies"],
+      "generic_fix": "Add a cookie policy describing cookie usage and consent."
+    },
+    {
+      "id": "GDPR-009",
+      "category": "Breach",
+      "description": "72-hour breach notification must be referenced",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["72 hours", "supervisory authority"],
+      "generic_fix": "Reference the 72-hour breach notification to the supervisory authority."
+    },
+    {
+      "id": "GDPR-010",
+      "category": "Design",
+      "description": "Privacy by design must be referenced",
+      "severity": "info",
+      "detection_type": "keyword_required",
+      "keywords": ["privacy by design", "data protection by design"],
+      "generic_fix": "Reference privacy/data protection by design and by default."
+    },
+    {
+      "id": "GDPR-011",
+      "category": "Minimization",
+      "description": "Data minimization must be referenced",
+      "severity": "info",
+      "detection_type": "keyword_required",
+      "keywords": ["data minimization", "minimum data"],
+      "generic_fix": "State that only the minimum necessary personal data is collected."
+    },
+    {
+      "id": "GDPR-012",
+      "category": "Processors",
+      "description": "Processor agreements must be referenced",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["data processor", "processing agreement"],
+      "generic_fix": "Reference data processing agreements with all processors."
+    }
+  ]
+}

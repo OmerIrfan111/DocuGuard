@@ -1,0 +1,98 @@
+{
+  "name": "SOC 2",
+  "slug": "soc2",
+  "version": "2024",
+  "is_builtin": true,
+  "rules": [
+    {
+      "id": "SOC2-001",
+      "category": "Security",
+      "description": "Security policy must be documented",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["security policy", "information security policy"],
+      "generic_fix": "Document an information security policy."
+    },
+    {
+      "id": "SOC2-002",
+      "category": "Change Management",
+      "description": "Change management process must be referenced",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["change management", "change control"],
+      "generic_fix": "Describe the change management / change control process."
+    },
+    {
+      "id": "SOC2-003",
+      "category": "Incident Response",
+      "description": "Incident response plan must be referenced",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["incident response", "incident management"],
+      "generic_fix": "Reference an incident response plan."
+    },
+    {
+      "id": "SOC2-004",
+      "category": "Vendor Management",
+      "description": "Vendor management must be referenced",
+      "severity": "info",
+      "detection_type": "keyword_required",
+      "keywords": ["vendor management", "third-party risk"],
+      "generic_fix": "Describe third-party / vendor risk management."
+    },
+    {
+      "id": "SOC2-005",
+      "category": "Access Control",
+      "description": "Logical access controls must be referenced",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["logical access", "access control"],
+      "generic_fix": "Describe logical access controls."
+    },
+    {
+      "id": "SOC2-006",
+      "category": "Availability",
+      "description": "Availability commitments must be referenced",
+      "severity": "info",
+      "detection_type": "keyword_required",
+      "keywords": ["availability", "uptime", "sla"],
+      "generic_fix": "Reference availability commitments / SLAs."
+    },
+    {
+      "id": "SOC2-007",
+      "category": "Confidentiality",
+      "description": "Confidentiality agreements must be referenced",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["confidentiality", "nda", "non-disclosure"],
+      "generic_fix": "Reference confidentiality / non-disclosure obligations."
+    },
+    {
+      "id": "SOC2-008",
+      "category": "Processing Integrity",
+      "description": "Processing integrity must be referenced",
+      "severity": "info",
+      "detection_type": "keyword_required",
+      "keywords": ["processing integrity", "data integrity"],
+      "generic_fix": "Reference processing/data integrity controls."
+    },
+    {
+      "id": "SOC2-009",
+      "category": "Monitoring",
+      "description": "Monitoring and logging must be referenced",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["monitoring", "logging", "audit log"],
+      "generic_fix": "Describe monitoring and logging controls."
+    },
+    {
+      "id": "SOC2-010",
+      "category": "Vulnerability",
+      "description": "Vulnerability management must be referenced",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["vulnerability management", "patch management"],
+      "generic_fix": "Reference vulnerability and patch management."
+    }
+  ]
+}

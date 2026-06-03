@@ -1,0 +1,80 @@
+{
+  "name": "Internal Audit Baseline",
+  "slug": "internal_audit",
+  "version": "2024",
+  "is_builtin": true,
+  "rules": [
+    {
+      "id": "IA-001",
+      "category": "Privacy",
+      "description": "SSN must not appear in plain text",
+      "severity": "critical",
+      "detection_type": "pattern",
+      "pattern": "\\b\\d{3}-\\d{2}-\\d{4}\\b",
+      "generic_fix": "Redact or encrypt SSN values."
+    },
+    {
+      "id": "IA-002",
+      "category": "Governance",
+      "description": "Document owner must be identified",
+      "severity": "info",
+      "detection_type": "keyword_required",
+      "keywords": ["document owner", "owner:", "prepared by"],
+      "generic_fix": "Identify the document owner."
+    },
+    {
+      "id": "IA-003",
+      "category": "Governance",
+      "description": "Approval / sign-off must be present",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["approved by", "sign-off", "signature"],
+      "generic_fix": "Add an approval / sign-off section."
+    },
+    {
+      "id": "IA-004",
+      "category": "Review",
+      "description": "Review date must be present",
+      "severity": "info",
+      "detection_type": "keyword_required",
+      "keywords": ["review date", "next review", "effective date"],
+      "generic_fix": "Add an effective and next-review date."
+    },
+    {
+      "id": "IA-005",
+      "category": "Confidentiality",
+      "description": "Confidentiality classification must be present",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["confidential", "internal use only", "classification"],
+      "generic_fix": "Add a confidentiality classification label."
+    },
+    {
+      "id": "IA-006",
+      "category": "Security",
+      "description": "Access control must be referenced",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["access control", "authorized personnel"],
+      "generic_fix": "Reference access controls."
+    },
+    {
+      "id": "IA-007",
+      "category": "Retention",
+      "description": "Retention policy must be referenced",
+      "severity": "info",
+      "detection_type": "keyword_required",
+      "keywords": ["retention", "records retention"],
+      "generic_fix": "Reference a records retention policy."
+    },
+    {
+      "id": "IA-008",
+      "category": "Risk",
+      "description": "Risk assessment must be referenced",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["risk assessment", "risk register"],
+      "generic_fix": "Reference a risk assessment."
+    }
+  ]
+}

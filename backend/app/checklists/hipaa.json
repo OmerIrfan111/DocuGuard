@@ -1,0 +1,116 @@
+{
+  "name": "HIPAA",
+  "slug": "hipaa",
+  "version": "2024",
+  "is_builtin": true,
+  "rules": [
+    {
+      "id": "HIPAA-001",
+      "category": "Data Privacy",
+      "description": "Patient SSN must not appear in plain text",
+      "severity": "critical",
+      "detection_type": "pattern",
+      "pattern": "\\b\\d{3}-\\d{2}-\\d{4}\\b",
+      "generic_fix": "Redact or encrypt all SSN values before storing or transmitting the document."
+    },
+    {
+      "id": "HIPAA-002",
+      "category": "Data Privacy",
+      "description": "Date of birth should not be exposed in plain text",
+      "severity": "warning",
+      "detection_type": "pattern",
+      "pattern": "\\b\\d{2}/\\d{2}/\\d{4}\\b",
+      "generic_fix": "Mask dates of birth or store them in an encrypted field."
+    },
+    {
+      "id": "HIPAA-003",
+      "category": "Authorization",
+      "description": "Patient consent / signature must be present",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["patient signature", "consent", "authorized by"],
+      "generic_fix": "Add an explicit patient consent and signature section."
+    },
+    {
+      "id": "HIPAA-004",
+      "category": "Safeguards",
+      "description": "PHI encryption clause must be stated",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["encryption", "encrypted", "aes"],
+      "generic_fix": "State that PHI is encrypted at rest and in transit (e.g. AES-256)."
+    },
+    {
+      "id": "HIPAA-005",
+      "category": "Privacy",
+      "description": "Minimum necessary standard must be referenced",
+      "severity": "info",
+      "detection_type": "keyword_required",
+      "keywords": ["minimum necessary"],
+      "generic_fix": "Reference the HIPAA minimum necessary standard for PHI use and disclosure."
+    },
+    {
+      "id": "HIPAA-006",
+      "category": "Authorization",
+      "description": "Data sharing authorization must be documented",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["authorized to share", "data sharing agreement"],
+      "generic_fix": "Document the authorization basis for any PHI sharing."
+    },
+    {
+      "id": "HIPAA-007",
+      "category": "Breach",
+      "description": "Breach notification clause must be present",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["breach notification", "notify within"],
+      "generic_fix": "Add a breach notification clause with required timelines."
+    },
+    {
+      "id": "HIPAA-008",
+      "category": "Contracts",
+      "description": "Business associate agreement must be referenced",
+      "severity": "info",
+      "detection_type": "keyword_required",
+      "keywords": ["business associate", "baa"],
+      "generic_fix": "Reference an executed Business Associate Agreement (BAA)."
+    },
+    {
+      "id": "HIPAA-009",
+      "category": "Access Control",
+      "description": "Access control policy must be stated",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["access control", "role-based access"],
+      "generic_fix": "Describe role-based access controls for PHI."
+    },
+    {
+      "id": "HIPAA-010",
+      "category": "Audit",
+      "description": "Audit controls must be referenced",
+      "severity": "info",
+      "detection_type": "keyword_required",
+      "keywords": ["audit log", "audit trail"],
+      "generic_fix": "Reference audit logging / audit trail controls."
+    },
+    {
+      "id": "HIPAA-011",
+      "category": "Safeguards",
+      "description": "Transmission security must be stated",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["transmission security", "tls", "ssl", "encrypted transmission"],
+      "generic_fix": "State transmission security controls (TLS/SSL) for PHI in transit."
+    },
+    {
+      "id": "HIPAA-012",
+      "category": "Privacy",
+      "description": "De-identification must be referenced where applicable",
+      "severity": "info",
+      "detection_type": "keyword_required",
+      "keywords": ["de-identified", "de-identification"],
+      "generic_fix": "Reference de-identification procedures for secondary use of PHI."
+    }
+  ]
+}

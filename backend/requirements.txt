@@ -1,0 +1,40 @@
+# ── Web framework ────────────────────────────────────────────────
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+pydantic==2.10.5
+pydantic-settings==2.7.1
+email-validator==2.2.0
+
+# ── Database / cache ─────────────────────────────────────────────
+motor==3.6.0
+pymongo==4.9.2
+redis==5.2.1
+
+# ── Async task queue ─────────────────────────────────────────────
+celery==5.4.0
+
+# ── Auth & security ──────────────────────────────────────────────
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.0.1            # pinned: passlib 1.7.4 breaks with bcrypt>=4.1
+cryptography==44.0.0     # Fernet field encryption
+slowapi==0.1.9           # rate limiting (Phase 5)
+
+# ── File handling / OCR / NLP (Phase 2+) ─────────────────────────
+python-magic==0.4.27     # magic-byte file validation (needs libmagic1)
+aiofiles==24.1.0
+pytesseract==0.3.13
+Pillow==11.1.0
+tika==2.6.0              # Apache Tika (needs Java)
+spacy==3.8.3
+
+# ── AWS (Textract + Bedrock) ─────────────────────────────────────
+boto3==1.35.99
+
+# ── Reports (Phase 4) ────────────────────────────────────────────
+reportlab==4.2.5
+python-docx==1.1.2
+
+# ── Misc ─────────────────────────────────────────────────────────
+python-dotenv==1.0.1

@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+backend/.env
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+
+# Local file storage (uploaded documents + generated reports)
+storage/
+backend/storage/
+
+# Generated build artifacts
+*.log
+
+# Generated test fixtures (recreated by tests/test_offline.py)
+backend/tests/fixtures/
+
+# Vendored skills (restored via skills-lock.json) — tooling, not product code
+.agents/
+
+# Keep the dev-plan generator deps out of git
+/node_modules/
+package-lock.json

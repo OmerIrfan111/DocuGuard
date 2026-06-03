@@ -1,0 +1,98 @@
+{
+  "name": "PCI-DSS",
+  "slug": "pci_dss",
+  "version": "4.0",
+  "is_builtin": true,
+  "rules": [
+    {
+      "id": "PCI-001",
+      "category": "Cardholder Data",
+      "description": "Full PAN (card number) must not appear in plain text",
+      "severity": "critical",
+      "detection_type": "pattern",
+      "pattern": "\\b\\d{4}[ -]?\\d{4}[ -]?\\d{4}[ -]?\\d{4}\\b",
+      "generic_fix": "Mask or tokenize the PAN; never store the full card number in clear text."
+    },
+    {
+      "id": "PCI-002",
+      "category": "Cardholder Data",
+      "description": "CVV/CVC must never be stored",
+      "severity": "critical",
+      "detection_type": "keyword_forbidden",
+      "keywords": ["cvv", "cvc", "card verification"],
+      "generic_fix": "Remove all references to storing CVV/CVC; sensitive auth data must not be retained."
+    },
+    {
+      "id": "PCI-003",
+      "category": "Protection",
+      "description": "Cardholder data protection must be stated",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["cardholder data", "protect stored", "data protection"],
+      "generic_fix": "Describe how stored cardholder data is protected."
+    },
+    {
+      "id": "PCI-004",
+      "category": "Encryption",
+      "description": "Encryption standard must be stated",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["encryption", "aes", "strong cryptography"],
+      "generic_fix": "State the encryption standard used for cardholder data."
+    },
+    {
+      "id": "PCI-005",
+      "category": "Network",
+      "description": "Network segmentation must be referenced",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["network segmentation", "segmentation"],
+      "generic_fix": "Reference network segmentation of the cardholder data environment."
+    },
+    {
+      "id": "PCI-006",
+      "category": "Access Control",
+      "description": "Access restriction must be referenced",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["access restriction", "need to know", "least privilege"],
+      "generic_fix": "Restrict access to cardholder data on a need-to-know basis."
+    },
+    {
+      "id": "PCI-007",
+      "category": "Testing",
+      "description": "Security testing must be referenced",
+      "severity": "info",
+      "detection_type": "keyword_required",
+      "keywords": ["security testing", "penetration test", "vulnerability scan"],
+      "generic_fix": "Reference regular security testing (scans / penetration tests)."
+    },
+    {
+      "id": "PCI-008",
+      "category": "Incident Response",
+      "description": "Incident response must be referenced",
+      "severity": "warning",
+      "detection_type": "keyword_required",
+      "keywords": ["incident response", "incident management"],
+      "generic_fix": "Reference an incident response plan."
+    },
+    {
+      "id": "PCI-009",
+      "category": "Network",
+      "description": "Firewall configuration must be referenced",
+      "severity": "info",
+      "detection_type": "keyword_required",
+      "keywords": ["firewall"],
+      "generic_fix": "Reference firewall configuration standards."
+    },
+    {
+      "id": "PCI-010",
+      "category": "Malware",
+      "description": "Anti-malware policy must be referenced",
+      "severity": "info",
+      "detection_type": "keyword_required",
+      "keywords": ["anti-malware", "antivirus", "malware protection"],
+      "generic_fix": "Reference an anti-malware / antivirus policy."
+    }
+  ]
+}
