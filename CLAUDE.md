@@ -114,9 +114,47 @@ docker compose exec api python -m app.scripts.seed_admin --email admin@docuguard
     — SSN→HIPAA-001 critical with exact offsets, risk High/100, ai_fix_suggestion populated
     (fell back to "Manual review required." with placeholder AWS creds), checklist RBAC enforced.
   - **NOT yet exercised:** real Bedrock summaries/fix text (needs AWS creds).
-- [ ] Phase 4–5 — not started. Phase 4 = full React dashboard, PDF viewer + violation highlights,
-  audit reports (PDF/DOCX), notifications. **Use the .agents frontend skills (frontend-design,
-  impeccable, design-motion-principles) when building Phase 4 UI.**
+- [x] **Phase 4 — Dashboard, Review Workflow & Audit Reports (VERIFIED ✅)**
+  - Backend: `report_service` (PDF/ReportLab + DOCX/python-docx, 8 sections), `reports` router
+    (generate + authenticated local download), documents `approve`/`reject`/`delete`/`file` +
+    `/stats` + filtered pagination, `users` (role/activate, admin), `audit-logs` (+CSV export,
+    admin/auditor), `notifications` (list/read/read-all), `PATCH /auth/password`.
+  - Frontend (built with `.agents` frontend-design skill): **"Notarial Ledger" aesthetic** —
+    parchment canvas, navy ink, brass accent, Fraunces/Hanken Grotesk/IBM Plex Mono.
+    Design system (tailwind tokens, UI primitives), app shell (Sidebar + Topbar + NotificationsBell),
+    pages: Dashboard (stats + filterable table), Upload (dropzone + checklist + progress),
+    DocumentReview (viewer + Overview/Violations/Actions tabs + RiskMeter + approve/reject/report),
+    AuditLogs (+CSV), ChecklistBuilder (4 detection types), AdminUsers, Settings, restyled Login/Register.
+  - Verified: Phase 4 backend HTTP QA **26/26** (`scripts/qa_phase4.py`); frontend `vite build`
+    **2047 modules, 0 errors**; SPA serves; all earlier QA still green.
+  - **Decision:** the document viewer uses the browser-native renderer (iframe for PDF, img for
+    images, download for DOCX) instead of `@react-pdf-viewer` + pdfjs character-offset overlays.
+    The offset→PDF-coordinate overlay was flagged High-risk in the plan (§4.5) and is unreliable;
+    violations are instead surfaced in a precise inspector (matched_text + offsets + AI fix).
+    Revisit if true in-page highlight overlays become a hard requirement.
+- [x] **Phase 5 — Security & Hardening (VERIFIED ✅)**
+  - **Rate limiting (slowapi):** `app/rate_limit.py` limiter (per IP); `@limiter.limit("10/minute")`
+    on `POST /documents/upload`, `@limiter.limit("30/minute")` on `POST /compliance/validate/:id`;
+    429 on breach. Verified: 10 allowed → 11th = 429.
+  - **Security headers** on every response: X-Content-Type-Options, X-Frame-Options=DENY,
+    X-XSS-Protection, Referrer-Policy=no-referrer, Permissions-Policy, Cross-Origin-Opener-Policy;
+    HSTS in production. **CORS** whitelist only (verified non-whitelisted origin gets no ACAO).
+  - **Dependency hardening:** bumped fastapi 0.118 / starlette 0.48 (multipart DoS), python-jose
+    3.4.0 (JWT algo/bomb), python-multipart 0.0.27, Pillow 12.2.0, python-dotenv 1.2.2; Dockerfile
+    upgrades pip/setuptools/wheel. (Frontend `npm audit`: 2 *moderate*, esbuild/vite **dev-server
+    only** — not a prod risk; would require vite 8 breaking upgrade. Left as accepted.)
+  - Already in place from earlier phases: bcrypt cost-12, JWT access(jti)+refresh, Redis blacklist,
+    Fernet field encryption, magic-byte validation + extension anti-spoof, path-traversal guard,
+    `require_role` RBAC on every protected route, secrets via .env, Motor (no raw queries).
+  - Verified: Phase 5 QA **8/8** (`scripts/qa_phase5.py`); all prior QA still green after dep bumps.
+
+> **Branding:** "DG" interlocking monogram at `frontend/src/components/ui/Logo.jsx` (inline SVG,
+> currentColor) + `frontend/public/logo.svg` (favicon). Replace `public/logo.svg` to swap the asset.
+
+### All five phases complete + verified. Remaining optional work
+- True in-page PDF highlight overlays (offset→coordinate) — deferred (see Phase 4 decision).
+- Real AWS creds to exercise Textract + Bedrock AI text live (graceful fallbacks confirmed).
+- Frontend vite/esbuild major upgrade to clear the 2 moderate dev-only advisories.
 
 ## Conventions
 - Roles: `admin | reviewer | auditor`. Default on register = `reviewer`. RBAC via `require_role(*roles)`.

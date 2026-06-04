@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Literal, Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 DocStatus = Literal["pending", "extracting", "classifying", "validating", "completed", "failed"]
 ApprovalStatus = Literal["pending", "approved", "rejected"]
@@ -35,6 +35,17 @@ class DocumentDetail(DocumentPublic):
     rejection_reason: str | None = None
     comments: list[Any] = []
     audit_report_path: str | None = None
+
+
+class RejectRequest(BaseModel):
+    reason: str = Field(min_length=1, max_length=1000)
+
+
+class PaginatedDocuments(BaseModel):
+    items: list[DocumentPublic]
+    total: int
+    page: int
+    limit: int
 
 
 class UploadResponse(BaseModel):

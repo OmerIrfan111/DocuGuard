@@ -21,6 +21,18 @@ def serialize(doc: dict | None) -> dict | None:
     return out
 
 
+async def create_notification(*, user_id: str, message: str, document_id: str | None = None,
+                              ntype: str = "upload") -> None:
+    await db.notifications.insert_one({
+        "user_id": user_id,
+        "message": message,
+        "document_id": document_id,
+        "type": ntype,
+        "read": False,
+        "created_at": utcnow(),
+    })
+
+
 async def write_audit_log(
     *,
     user_id: str | None,

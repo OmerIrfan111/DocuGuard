@@ -1,7 +1,8 @@
 # ── Web framework ────────────────────────────────────────────────
-fastapi==0.115.6
+fastapi==0.118.0
+starlette==0.48.0          # patched: CVE-2025-54121 / PYSEC-2026-161 multipart DoS
 uvicorn[standard]==0.34.0
-python-multipart==0.0.20
+python-multipart==0.0.27   # patched: multipart parsing DoS CVEs
 pydantic==2.10.5
 pydantic-settings==2.7.1
 email-validator==2.2.0
@@ -15,7 +16,7 @@ redis==5.2.1
 celery==5.4.0
 
 # ── Auth & security ──────────────────────────────────────────────
-python-jose[cryptography]==3.3.0
+python-jose[cryptography]==3.4.0   # patched: PYSEC-2024-232/233 JWT algorithm/bomb
 passlib[bcrypt]==1.7.4
 bcrypt==4.0.1            # pinned: passlib 1.7.4 breaks with bcrypt>=4.1
 cryptography==44.0.0     # Fernet field encryption
@@ -25,7 +26,7 @@ slowapi==0.1.9           # rate limiting (Phase 5)
 python-magic==0.4.27     # magic-byte file validation (needs libmagic1)
 aiofiles==24.1.0
 pytesseract==0.3.13
-Pillow==11.1.0
+Pillow==12.2.0           # patched: multiple image-parsing CVEs in 11.x
 tika==2.6.0              # Apache Tika (needs Java)
 spacy==3.8.3
 
@@ -37,4 +38,4 @@ reportlab==4.2.5
 python-docx==1.1.2
 
 # ── Misc ─────────────────────────────────────────────────────────
-python-dotenv==1.0.1
+python-dotenv==1.2.2

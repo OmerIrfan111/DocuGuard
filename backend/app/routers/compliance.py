@@ -10,6 +10,7 @@ from app.models.checklist import ChecklistCreate, ChecklistUpdate, ChecklistPubl
 from app.services import checklist_service
 from app.tasks.document_tasks import start_revalidation
 from app.utils.helpers import utcnow, write_audit_log
+from app.rate_limit import limiter
 
 router = APIRouter(prefix="/api/compliance", tags=["compliance"])
 
@@ -106,7 +107,8 @@ class ValidateRequest(BaseModel):
 
 
 @router.post("/validate/{document_id}", status_code=status.HTTP_202_ACCEPTED)
-async def revalidate(document_id: str, body: ValidateRequest | None = None,
+@limiter.limit("30/minute")
+async def revalidate(request: Request, document_id: str, body: ValidateRequest | None = None,
                      current=Depends(require_role("admin", "reviewer"))):
     try:
         doc = await db.documents.find_one({"_id": ObjectId(document_id)})

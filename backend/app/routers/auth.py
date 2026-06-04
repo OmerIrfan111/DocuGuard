@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response, Request, status
 from app.config import settings
 from app.database import db, redis_client
 from app.dependencies import get_current_user, get_current_user_from_refresh
-from app.models.user import UserRegister, UserLogin, UserPublic, TokenResponse
+from app.models.user import UserRegister, UserLogin, UserPublic, TokenResponse, PasswordChange
 from app.utils.auth_utils import (
     hash_password, verify_password, create_access_token, create_refresh_token,
 )
@@ -99,6 +99,17 @@ async def logout(response: Response, current=Depends(get_current_user_from_refre
     response.delete_cookie(REFRESH_COOKIE, path="/api/auth")
     await write_audit_log(user_id=current["user_id"], user_email=None, action="logout")
     return {"detail": "Logged out"}
+
+
+@router.patch("/password", status_code=status.HTTP_200_OK)
+async def change_password(payload: PasswordChange, current=Depends(get_current_user)):
+    user = await db.users.find_one({"_id": ObjectId(current["user_id"])})
+    if not user or not verify_password(payload.current_password, user["hashed_password"]):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Current password is incorrect")
+    await db.users.update_one({"_id": user["_id"]},
+                              {"$set": {"hashed_password": hash_password(payload.new_password)}})
+    await write_audit_log(user_id=current["user_id"], user_email=user["email"], action="change_password")
+    return {"detail": "Password updated"}
 
 
 @router.get("/me", response_model=UserPublic)

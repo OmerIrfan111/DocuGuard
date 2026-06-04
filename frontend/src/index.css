@@ -2,6 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-slate-100 text-slate-800 antialiased;
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+  html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  body {
+    @apply bg-paper text-ink font-sans;
+    background-image:
+      radial-gradient(1200px 600px at 100% -10%, rgba(169, 119, 43, 0.06), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(21, 35, 59, 0.05), transparent 55%);
+    background-attachment: fixed;
+  }
+  /* Brass focus ring for keyboard users */
+  :focus-visible { outline: 2px solid theme('colors.brass.DEFAULT'); outline-offset: 2px; }
+  ::selection { background: rgba(169, 119, 43, 0.22); }
 }
+
+@layer components {
+  .panel {
+    @apply rounded-2xl border border-line bg-surface shadow-card;
+  }
+  .hairline { @apply border-line; }
+  .eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint;
+  }
+  .stat-num { @apply font-display tabular-nums; }
+  .data { @apply font-mono tabular-nums; }
+  /* skeleton shimmer */
+  .skeleton {
+    @apply relative overflow-hidden bg-paper-deep rounded;
+  }
+  .skeleton::after {
+    content: ''; @apply absolute inset-0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    transform: translateX(-100%);
+    animation: shimmer 1.4s infinite;
+  }
+}
+
+/* Thin, ink-toned scrollbars */
+* { scrollbar-width: thin; scrollbar-color: #cabfa9 transparent; }
+*::-webkit-scrollbar { width: 9px; height: 9px; }
+*::-webkit-scrollbar-thumb { background: #cabfa9; border-radius: 9999px; border: 2px solid transparent; background-clip: content-box; }
+*::-webkit-scrollbar-thumb:hover { background: #b3a587; background-clip: content-box; }
+
+/* react-pdf-viewer container fit */
+.rpv-core__viewer { font-family: inherit; }
