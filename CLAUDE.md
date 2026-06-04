@@ -19,8 +19,13 @@ The authoritative spec is **`PROMPT (1).md`** at the repo root. The phased build
   **authenticated download endpoints**. **No S3, no cloud object storage.** Textract takes local
   file bytes directly. (An `-AsIs-S3` docx variant exists for reference only — it is NOT the design.)
 - **Auth = custom JWT** (python-jose) + **bcrypt** (cost 12). No Firebase, no OpenAI, no external auth.
-- **AI = AWS Bedrock only** (Claude 3.5 Sonnet). Every Bedrock call wrapped in try/except with a
-  `generic_fix` fallback.
+- **AI = AWS Bedrock only.** Every Bedrock call wrapped in try/except with a `generic_fix` fallback.
+  **LIVE** as of last session via a **Bedrock API key** (bearer token in `AWS_BEARER_TOKEN_BEDROCK`).
+  Model: `us.anthropic.claude-haiku-4-5-20251001-v1:0` (inference-profile ID — the `us.` prefix is
+  REQUIRED; bare IDs raise ValidationException). The spec's Claude 3.5/3.7 IDs are all retired.
+  Needs `boto3>=1.39` for bearer-token support (we pin `>=1.40`). `bedrock_service` creates the
+  client with region only (no sigv4 keys) so botocore uses the bearer token. Textract still needs
+  sigv4 keys (blank by default → fallback degrades gracefully).
 - **OCR = Tesseract (local) → AWS Textract (fallback).**
 - Access token in **memory only** (never localStorage); refresh token in **httpOnly cookie**.
 - `extracted_text` is **AES-256 Fernet encrypted** before storing in MongoDB.

@@ -4,6 +4,7 @@ Every call is wrapped in try/except; on any failure the caller receives a safe d
 the document pipeline never crashes when Bedrock is unavailable (per project constraints).
 """
 import json
+import os
 
 import boto3
 
@@ -15,12 +16,11 @@ _client = None
 def _bedrock():
     global _client
     if _client is None:
-        _client = boto3.client(
-            service_name="bedrock-runtime",
-            region_name=settings.BEDROCK_REGION,
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID or None,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY or None,
-        )
+        # Bedrock API key (bearer token): botocore reads AWS_BEARER_TOKEN_BEDROCK from the
+        # environment. Ensure it is present, then create the client without sigv4 keys.
+        if settings.AWS_BEARER_TOKEN_BEDROCK and not os.environ.get("AWS_BEARER_TOKEN_BEDROCK"):
+            os.environ["AWS_BEARER_TOKEN_BEDROCK"] = settings.AWS_BEARER_TOKEN_BEDROCK
+        _client = boto3.client("bedrock-runtime", region_name=settings.BEDROCK_REGION)
     return _client
 
 

@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     AWS_ACCESS_KEY_ID: str = ""
     AWS_SECRET_ACCESS_KEY: str = ""
     AWS_REGION: str = "us-east-1"
+    # Bedrock API key (bearer token). When set, boto3 uses it for Bedrock instead of sigv4.
+    AWS_BEARER_TOKEN_BEDROCK: str = ""
     BEDROCK_MODEL_ID: str = "anthropic.claude-3-5-sonnet-20241022-v2:0"
     BEDROCK_REGION: str = "us-east-1"
 
