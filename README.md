@@ -1,69 +1,90 @@
 # DocuGuard
 
-AI-powered **Document Intelligence & Compliance Automation**. Upload documents (PDF / DOCX /
-images); DocuGuard extracts text (OCR + NLP), classifies them, validates against compliance
-frameworks (HIPAA, GDPR, SOC 2, PCI-DSS), flags violations, uses AWS Bedrock (Claude)
-for fix suggestions and summaries, scores risk, and produces downloadable audit reports — all
-behind a role-based dashboard.
+DocuGuard is a full-stack platform that automates document compliance review. It ingests PDFs,
+Word documents, and images; extracts their text with OCR and NLP; classifies the document type;
+validates the content against regulatory frameworks (HIPAA, GDPR, SOC 2, PCI-DSS); detects
+violations with their exact locations; uses AWS Bedrock (Claude) to generate fix suggestions and
+summaries; scores risk; and produces downloadable audit reports — all through a secure,
+role-based web dashboard.
 
-## Architecture
-- **Frontend:** React (Vite) + Tailwind, Axios with JWT auto-refresh interceptor.
-- **Backend:** FastAPI + Celery/Redis, Motor (async MongoDB).
-- **Auth:** custom JWT (access in memory, refresh in httpOnly cookie) + bcrypt (cost 12).
-- **Storage:** **local filesystem** under `./storage`, served only via authenticated endpoints
-  (no S3). `extracted_text` is AES-256 Fernet encrypted at rest.
-- **AI/OCR:** AWS Bedrock + Textract; Tesseract local OCR; Apache Tika for PDF/DOCX.
+## Features
 
-## Prerequisites
-- Docker + Docker Compose.
-- An AWS account with Textract + Bedrock enabled (Bedrock model access for
-  `anthropic.claude-3-5-sonnet-20241022-v2:0`). Required from Phase 2 onward — Phase 1 runs
-  without AWS.
+- **Document upload** — PDF, DOCX, PNG, JPG with magic-byte type validation (50 MB / 10 files per request)
+- **Text extraction** — Tesseract OCR with AWS Textract fallback, Apache Tika for PDFs, python-docx for Word
+- **Classification** — rule-based document typing with an AWS Bedrock fallback
+- **Compliance engine** — four detection types (regex pattern, required keyword, forbidden keyword,
+  spaCy NLP entity) with character-precise violation offsets and 0–100 risk scoring (Low / Medium / High)
+- **Built-in checklists** — HIPAA, GDPR, SOC 2, PCI-DSS, plus a builder for custom checklists
+- **AI assistance** — per-violation fix suggestions and plain-language document summaries via AWS Bedrock (Claude)
+- **Review workflow** — approve/reject with reasons, status tracking, and a full audit trail
+- **Audit reports** — downloadable in PDF and DOCX
+- **Access control** — role-based permissions for admin, reviewer, and auditor
+- **Notifications & logging** — in-app notifications and activity logs with CSV export
+- **Security** — custom JWT auth (bcrypt, refresh-token rotation, Redis blacklist), AES-256 field
+  encryption, rate limiting, hardened security headers, and CORS whitelisting
 
-## Quick start
+## Tech stack
+
+- **Frontend:** React (Vite), Tailwind CSS, React Router, Axios, Framer Motion
+- **Backend:** FastAPI, Celery, Motor (async MongoDB)
+- **Data:** MongoDB, Redis
+- **AI / OCR:** AWS Bedrock (Claude), AWS Textract, Tesseract, Apache Tika, spaCy
+- **Infrastructure:** Docker Compose
+
+## Getting started
+
+**Prerequisites:** Docker and Docker Compose.
+
+**1. Configure environment**
 ```bash
-# 1. Configure backend env
 cp backend/.env.example backend/.env
+```
+Generate a JWT secret and a Fernet encryption key, and paste them into `backend/.env`:
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(48))"
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+```
+For AI features, add an AWS Bedrock API key (`AWS_BEARER_TOKEN_BEDROCK`) and enable model access
+in the AWS console. Without it, the app runs and degrades gracefully (rule-based and local OCR paths).
 
-# 2. Generate secrets and paste them into backend/.env
-python -c "import secrets; print(secrets.token_urlsafe(48))"                         # JWT_SECRET_KEY
-python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"  # FIELD_ENCRYPTION_KEY
-
-# 3. Launch the full stack
+**2. Start the stack**
+```bash
 docker compose up --build
 ```
-- API: http://localhost:8000  (Swagger UI at `/docs`, health at `/api/health`)
-- Frontend: http://localhost:5173
+- Web app: http://localhost:5173
+- API (Swagger docs): http://localhost:8000/docs
 
-### Seed the first admin
+**3. Create the first admin**
 ```bash
 docker compose exec api python -m app.scripts.seed_admin \
-  --email admin@docuguard.local --password 'ChangeMe123!' --name 'Admin'
+  --email admin@example.com --password "ChangeMe123!" --name Admin
 ```
-(New self-registrations default to the `reviewer` role.)
+Self-registered users receive the `reviewer` role by default.
 
-## Project status — Phase 1 (Foundation) complete
-Implemented:
-- Custom JWT auth: `register`, `login`, `refresh`, `logout`, `me` (+ Redis blacklist on logout).
-- Local filesystem storage service with path-traversal protection.
-- Document upload endpoint with magic-byte validation, size/batch limits, MongoDB record.
-- MongoDB collections + indexes; Motor + Redis clients with health check.
-- Celery app + chained pipeline skeleton (extract → classify → validate → summarise → notify).
-- React auth flow: AuthContext, protected routes, Axios 401→refresh→retry, Login/Register/Dashboard.
+## Project structure
 
-Next: **Phase 2 — Document Processing Pipeline** (OCR, extraction, classification). See the
-dev-plan QA gate (§1.4) before proceeding.
-
-## Repo layout
 ```
-backend/    FastAPI app (app/{config,database,dependencies,models,routers,services,tasks,utils,scripts})
-frontend/   React + Vite app (src/{api,context,hooks,components,pages})
-docker-compose.yml   api + worker + redis + mongo + frontend
+backend/   FastAPI app — config, database, auth, routers, services, Celery tasks, checklists, tests
+frontend/  React + Vite app — pages, components, hooks, API client
+docker-compose.yml   api, worker, redis, mongo, frontend
 ```
 
 ## Roles
-| Role | Permissions |
+
+| Role | Access |
 |---|---|
-| `admin` | Everything: users, delete docs, manage checklists, view all |
-| `reviewer` | Upload, review, annotate, approve/reject, download reports |
-| `auditor` | Read-only: documents, violations, audit logs |
+| `admin` | Full access: users, documents, checklists, and all data |
+| `reviewer` | Upload, review, approve/reject, and download reports |
+| `auditor` | Read-only access to documents, violations, and audit logs |
+
+## API overview
+
+```
+Auth          /api/auth/{register,login,refresh,logout,me,password}
+Documents     /api/documents (upload, list, get, status, approve, reject, delete, file, stats)
+Compliance    /api/compliance/{checklists, validate/:id}
+Reports       /api/reports/{generate/:id, :id/download}
+Users         /api/users (admin)
+Audit logs    /api/audit-logs (+ /export)
+Notifications /api/notifications
+```
