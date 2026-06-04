@@ -2,12 +2,9 @@
 
 AI-powered **Document Intelligence & Compliance Automation**. Upload documents (PDF / DOCX /
 images); DocuGuard extracts text (OCR + NLP), classifies them, validates against compliance
-frameworks (HIPAA, GDPR, SOC 2, PCI-DSS), flags violations, uses AWS Bedrock (Claude 3.5 Sonnet)
+frameworks (HIPAA, GDPR, SOC 2, PCI-DSS), flags violations, uses AWS Bedrock (Claude)
 for fix suggestions and summaries, scores risk, and produces downloadable audit reports — all
 behind a role-based dashboard.
-
-> Authoritative spec: [`PROMPT (1).md`](./PROMPT%20(1).md) · Phased plan:
-> `DocuGuard-Development-Plan.docx` · Working context for Claude: [`CLAUDE.md`](./CLAUDE.md)
 
 ## Architecture
 - **Frontend:** React (Vite) + Tailwind, Axios with JWT auto-refresh interceptor.
